@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>정우현사랑해요 상점</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background: #fff8f0; }
+        h1 { color: #e34c4c; }
+        .product { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; background: #fff; border-radius: 10px; }
+        button { background: #e34c4c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+        #orderForm { display: none; margin-top: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 10px; }
+        input, textarea { display: block; margin-top: 0.5rem; margin-bottom: 1rem; width: 100%; padding: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>정우현사랑해요 상점 🛍️</h1>
+
+    <div class="product">
+        <h2>귀여운 에코백</h2>
+        <p>₩12,000</p>
+        <button onclick="showOrderForm('귀여운 에코백')">주문하기</button>
+    </div>
+
+    <div class="product">
+        <h2>심플 머그컵</h2>
+        <p>₩8,000</p>
+        <button onclick="showOrderForm('심플 머그컵')">주문하기</button>
+    </div>
+
+    <div id="orderForm">
+        <h2>📦 주문서 작성</h2>
+        <p><strong>입금 계좌:</strong><br>우리은행 1005704783242 정우현</p>
+        <p>입금 후 아래 정보를 작성해주세요.</p>
+        <form>
+            <label>성함<input type="text" name="name" required></label>
+            <label>연락처<input type="text" name="phone" required></label>
+            <label>상품명<input type="text" id="productName" name="product" required></label>
+            <label>집주소<textarea name="address" required></textarea></label>
+            <button type="submit">제출</button>
+        </form>
+    </div>
+
+    <script>
+        function showOrderForm(product) {
+            document.getElementById('orderForm').style.display = 'block';
+            document.getElementById('productName').value = product;
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+</body>
+</html>
