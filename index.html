@@ -1,124 +1,95 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>정우현사랑해요 상점</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
+      padding: 40px;
       background: #fff;
-      color: #333;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
+      color: #222;
     }
     h1 {
       color: #e91e63;
     }
     .product {
-      border-bottom: 1px solid #ccc;
-      padding: 10px 0;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .order-form {
+      margin-top: 30px;
+      border-top: 2px solid #e91e63;
+      padding-top: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      margin-bottom: 12px;
     }
     button {
       background: #e91e63;
       color: white;
       border: none;
-      padding: 8px 12px;
-      margin-top: 5px;
+      padding: 10px 20px;
       cursor: pointer;
-    }
-    form {
-      margin-top: 20px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      margin: 6px 0;
-      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
-  <h1>정우현사랑해요 상점 🛍️</h1>
+  <h1>정우현사랑해요 상점 💐</h1>
 
   <div class="product">
     <h3>귀여운 에코백</h3>
     <p>₩12,000</p>
-    <button onclick="fillProduct('귀여운 에코백')">주문하기</button>
+    <button onclick="selectProduct('귀여운 에코백')">주문하기</button>
   </div>
 
   <div class="product">
     <h3>심플 머그컵</h3>
     <p>₩8,000</p>
-    <button onclick="fillProduct('심플 머그컵')">주문하기</button>
+    <button onclick="selectProduct('심플 머그컵')">주문하기</button>
   </div>
 
   <div class="product">
     <h3>에너지바</h3>
     <p>₩5,000</p>
-    <button onclick="fillProduct('에너지바')">주문하기</button>
+    <button onclick="selectProduct('에너지바')">주문하기</button>
   </div>
 
-  <h2>📄 주문서 작성</h2>
-  <p>
-    입금 계좌:<br/>
-    우리은행 1005704783242 정우현<br/><br/>
-    입금 후 아래 정보를 작성해주세요.
-  </p>
+  <div class="order-form">
+    <h3>📝 주문서 작성</h3>
+    <p>입금 계좌: 우리은행 1005704783242 정우현</p>
+    <p>입금 후 아래 정보를 작성해주세요.</p>
 
-  <form id="https://formspree.io/f/mwpboqjv">
-    <label>성함:</label>
-    <input type="text" name="name" required />
+    <form action="https://formspree.io/f/mwpboqjv" method="POST">
+      <label>성함:<br>
+        <input type="text" name="성함" required>
+      </label><br>
 
-    <label>연락처:</label>
-    <input type="text" name="phone" required />
+      <label>연락처:<br>
+        <input type="text" name="연락처" required>
+      </label><br>
 
-    <label>상품명:</label>
-    <input type="text" name="product" id="productInput" required />
+      <label>상품명:<br>
+        <input type="text" name="상품명" id="productName" required>
+      </label><br>
 
-    <label>집주소:</label>
-    <textarea name="address" required></textarea>
+      <label>집주소:<br>
+        <textarea name="집주소" required></textarea>
+      </label><br>
 
-    <button type="submit">주문서 제출</button>
-  </form>
+      <button type="submit">주문서 전송</button>
+    </form>
+  </div>
 
   <script>
-    function fillProduct(name) {
-      document.getElementById('productInput').value = name;
+    function selectProduct(name) {
+      document.getElementById("productName").value = name;
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
-
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const message = `
-        새 주문이 도착했습니다!
-
-        📌 성함: ${formData.get('name')}
-        📞 연락처: ${formData.get('phone')}
-        📦 상품명: ${formData.get('product')}
-        🏡 집주소: ${formData.get('address')}
-      `;
-
-      fetch("https://formspree.io/f/xwkgbwjz", {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json'
-        },
-        body: new URLSearchParams({
-          message: message,
-          _replyto: "Kyunghyekim39@gmail.com"
-        })
-      }).then(response => {
-        if (response.ok) {
-          alert("주문서가 성공적으로 전송되었습니다!");
-          e.target.reset();
-        } else {
-          alert("주문서 전송에 실패했습니다. 다시 시도해주세요.");
-        }
-      });
-    });
   </script>
 </body>
 </html>
