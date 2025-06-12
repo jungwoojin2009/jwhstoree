@@ -1,95 +1,152 @@
+# 코드 실행 상태가 초기화되어 다시 HTML 코드 파일을 저장합니다.
+
+from pathlib import Path
+
+# HTML 코드 다시 작성
+html_code = '''
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>정우현사랑해요 상점</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>정우현상점 💐</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      padding: 40px;
-      background: #fff;
-      color: #222;
+      background: #fff8f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
     }
-    h1 {
-      color: #e91e63;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #e91e63;
+      color: white;
+      padding: 20px;
+      font-size: 1.2rem;
     }
     .product {
       border: 1px solid #ccc;
+      border-radius: 8px;
       padding: 15px;
-      margin-bottom: 15px;
+      margin: 15px 0;
+      background: #fff;
     }
-    .order-form {
+    button {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #d81b60;
+    }
+    .cart-section {
+      display: none;
+      background: #fff0f3;
+      padding: 20px;
+      border-radius: 8px;
       margin-top: 30px;
-      border-top: 2px solid #e91e63;
-      padding-top: 20px;
     }
     input, textarea {
       width: 100%;
       padding: 8px;
-      margin-top: 6px;
-      margin-bottom: 12px;
-    }
-    button {
-      background: #e91e63;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <h1>정우현사랑해요 상점 💐</h1>
+
+  <header>
+    <div>정우현상점 💐</div>
+    <button onclick="toggleCart()">장바구니 보기 🛒</button>
+  </header>
 
   <div class="product">
     <h3>귀여운 에코백</h3>
     <p>₩12,000</p>
-    <button onclick="selectProduct('귀여운 에코백')">주문하기</button>
+    <button onclick="addToCart('귀여운 에코백')">담기</button>
   </div>
 
   <div class="product">
     <h3>심플 머그컵</h3>
     <p>₩8,000</p>
-    <button onclick="selectProduct('심플 머그컵')">주문하기</button>
+    <button onclick="addToCart('심플 머그컵')">담기</button>
   </div>
 
   <div class="product">
     <h3>에너지바</h3>
     <p>₩5,000</p>
-    <button onclick="selectProduct('에너지바')">주문하기</button>
+    <button onclick="addToCart('에너지바')">담기</button>
   </div>
 
-  <div class="order-form">
-    <h3>📝 주문서 작성</h3>
-    <p>입금 계좌: 우리은행 1005704783242 정우현</p>
-    <p>입금 후 아래 정보를 작성해주세요.</p>
-
+  <div class="cart-section" id="cartSection">
+    <h3>🛒 장바구니</h3>
+    <ul id="cartList"></ul>
+    <h3>주문서 작성</h3>
     <form action="https://formspree.io/f/mwpboqjv" method="POST">
       <label>성함:<br>
         <input type="text" name="성함" required>
-      </label><br>
-
+      </label>
       <label>연락처:<br>
         <input type="text" name="연락처" required>
-      </label><br>
-
-      <label>상품명:<br>
-        <input type="text" name="상품명" id="productName" required>
-      </label><br>
-
+      </label>
+      <label>상품 목록:<br>
+        <input type="text" name="상품목록" id="orderItems" readonly required>
+      </label>
       <label>집주소:<br>
         <textarea name="집주소" required></textarea>
-      </label><br>
-
+      </label>
       <button type="submit">주문서 전송</button>
     </form>
   </div>
 
   <script>
-    function selectProduct(name) {
-      document.getElementById("productName").value = name;
+    const cart = [];
+
+    function addToCart(item) {
+      cart.push(item);
+      alert(item + "이(가) 장바구니에 추가되었습니다.");
+    }
+
+    function toggleCart() {
+      const cartSection = document.getElementById("cartSection");
+      const cartList = document.getElementById("cartList");
+      const orderItems = document.getElementById("orderItems");
+      if (cart.length === 0) {
+        alert("장바구니가 비어 있습니다.");
+        return;
+      }
+      cartSection.style.display = "block";
+      cartList.innerHTML = "";
+      const count = {};
+      cart.forEach(item => {
+        count[item] = (count[item] || 0) + 1;
+      });
+      let summary = [];
+      for (let key in count) {
+        const li = document.createElement("li");
+        li.textContent = `${key} x ${count[key]}`;
+        cartList.appendChild(li);
+        summary.push(`${key} x ${count[key]}`);
+      }
+      orderItems.value = summary.join(", ");
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
   </script>
+
 </body>
 </html>
+'''
+
+# 저장 경로
+path = Path("/mnt/data/index.html")
+path.write_text(html_code, encoding='utf-8')
+path
