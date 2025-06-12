@@ -1,52 +1,124 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>정우현사랑해요 상점</title>
-    <style>
-        body { font-family: sans-serif; padding: 2rem; background: #fff8f0; }
-        h1 { color: #e34c4c; }
-        .product { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; background: #fff; border-radius: 10px; }
-        button { background: #e34c4c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
-        #orderForm { display: none; margin-top: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 10px; }
-        input, textarea { display: block; margin-top: 0.5rem; margin-bottom: 1rem; width: 100%; padding: 0.5rem; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>정우현사랑해요 상점</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #fff;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #e91e63;
+    }
+    .product {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    button {
+      background: #e91e63;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    form {
+      margin-top: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
-    <h1>정우현사랑해요 상점 🛍️</h1>
+  <h1>정우현사랑해요 상점 🛍️</h1>
 
-    <div class="product">
-        <h2>귀여운 에코백</h2>
-        <p>₩12,000</p>
-        <button onclick="showOrderForm('귀여운 에코백')">주문하기</button>
-    </div>
+  <div class="product">
+    <h3>귀여운 에코백</h3>
+    <p>₩12,000</p>
+    <button onclick="fillProduct('귀여운 에코백')">주문하기</button>
+  </div>
 
-    <div class="product">
-        <h2>심플 머그컵</h2>
-        <p>₩8,000</p>
-        <button onclick="showOrderForm('심플 머그컵')">주문하기</button>
-    </div>
+  <div class="product">
+    <h3>심플 머그컵</h3>
+    <p>₩8,000</p>
+    <button onclick="fillProduct('심플 머그컵')">주문하기</button>
+  </div>
 
-    <div id="orderForm">
-        <h2>📦 주문서 작성</h2>
-        <p><strong>입금 계좌:</strong><br>우리은행 1005704783242 정우현</p>
-        <p>입금 후 아래 정보를 작성해주세요.</p>
-        <form>
-            <label>성함<input type="text" name="name" required></label>
-            <label>연락처<input type="text" name="phone" required></label>
-            <label>상품명<input type="text" id="productName" name="product" required></label>
-            <label>집주소<textarea name="address" required></textarea></label>
-            <button type="submit">제출</button>
-        </form>
-    </div>
+  <div class="product">
+    <h3>에너지바</h3>
+    <p>₩5,000</p>
+    <button onclick="fillProduct('에너지바')">주문하기</button>
+  </div>
 
-    <script>
-        function showOrderForm(product) {
-            document.getElementById('orderForm').style.display = 'block';
-            document.getElementById('productName').value = product;
-            window.scrollTo(0, document.body.scrollHeight);
+  <h2>📄 주문서 작성</h2>
+  <p>
+    입금 계좌:<br/>
+    우리은행 1005704783242 정우현<br/><br/>
+    입금 후 아래 정보를 작성해주세요.
+  </p>
+
+  <form id="orderForm">
+    <label>성함:</label>
+    <input type="text" name="name" required />
+
+    <label>연락처:</label>
+    <input type="text" name="phone" required />
+
+    <label>상품명:</label>
+    <input type="text" name="product" id="productInput" required />
+
+    <label>집주소:</label>
+    <textarea name="address" required></textarea>
+
+    <button type="submit">주문서 제출</button>
+  </form>
+
+  <script>
+    function fillProduct(name) {
+      document.getElementById('productInput').value = name;
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const message = `
+        새 주문이 도착했습니다!
+
+        📌 성함: ${formData.get('name')}
+        📞 연락처: ${formData.get('phone')}
+        📦 상품명: ${formData.get('product')}
+        🏡 집주소: ${formData.get('address')}
+      `;
+
+      fetch("https://formspree.io/f/xwkgbwjz", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: new URLSearchParams({
+          message: message,
+          _replyto: "Kyunghyekim39@gmail.com"
+        })
+      }).then(response => {
+        if (response.ok) {
+          alert("주문서가 성공적으로 전송되었습니다!");
+          e.target.reset();
+        } else {
+          alert("주문서 전송에 실패했습니다. 다시 시도해주세요.");
         }
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
